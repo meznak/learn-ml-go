@@ -60,5 +60,68 @@ func main() {
 }
 
 func FindLinearBoundary(points *[]point, weights *[]float64, bias *float64) {
+	point_count := len(*points)
+	points_since_change := 0
 
+	/*
+		while points_since_change < point_count:
+			check sign of result vs class
+		    if result != class:
+				update weights & bias
+				reset points_since_change
+			else:
+				increment points_since_change
+
+			if index == point_count:
+				reset index
+	*/
+
+	for {
+		for _, point := range *points {
+			result := dot_product(&point.x, weights)
+			if result*point.y <= 0 {
+				update_wb(point, weights, bias)
+				points_since_change = 0
+			} else {
+				points_since_change++
+				if points_since_change == point_count {
+					return
+				}
+			}
+		}
+	}
+}
+
+func dot_product(a, b *[]float64) float64 {
+	total := 0.0
+
+	for i, x := range *a {
+		total += x * (*b)[i]
+	}
+
+	return total
+}
+
+func scalar_product(coeff float64, vec []float64) []float64 {
+	for i, v := range vec {
+		vec[i] = v * coeff
+	}
+
+	return vec
+}
+
+func vec_sum(a, b []float64) []float64 {
+	output := make([]float64, len(a))
+
+	for i, v := range a {
+		output[i] = v + b[i]
+	}
+
+	return output
+}
+
+func update_wb(p point, weights *[]float64, bias *float64) {
+	scaled_x := scalar_product(p.y, p.x)
+
+	*weights = vec_sum(*weights, scaled_x)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type point struct {
-	x []int
+	x []float64
 	y float64
 }
 
@@ -53,17 +53,17 @@ func ReadInputPoints(fname string) []point {
 		xString := strings.Split(splitLine[0], ",")
 
 		var p point
-		p.x = make([]int, len(xString))
+		p.x = make([]float64, len(xString))
 
 		for j, vString := range xString {
-			x, err := strconv.Atoi(vString)
+			x, err := strconv.ParseFloat(vString, 64)
 			if err != nil {
 				panic(err)
 			}
 			p.x[j] = x
 		}
 
-		y, err := strconv.ParseFloat(splitLine[1], 32)
+		y, err := strconv.ParseFloat(splitLine[1], 64)
 		if err != nil {
 			panic(err)
 		}
